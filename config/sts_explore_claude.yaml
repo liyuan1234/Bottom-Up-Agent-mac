@@ -11,7 +11,7 @@ result_path: 'results'
 teacher_type: 'Random' # Human or AI or Random
 
 brain:
-  base_model: 'gpt-4o' # gpt-4o or claude-3-7-sonnet-20250219
+  base_model: 'claude-3-7-sonnet-20250219' # gpt-4o or claude-3-7-sonnet-20250219
   evaluate_model: 'gpt-4o'
 
   uct_c: 5.0

@@ -30,7 +30,7 @@ def generate_skill_tools(model_name):
                 }
             }
         ]
-    elif model_name == "gpt-4o" or "o4-mini":
+    elif model_name == "gpt-4o" or model_name == "o4-mini":
         return [
             {
                 "type": "function",
@@ -141,7 +141,7 @@ def get_explore_guidance_tools(model_name):
             }
         ]
 
-    elif model_name == "gpt-4o" or "o4-mini":
+    elif model_name == "gpt-4o" or model_name == "o4-mini":
         schema = "parameters"
         return None
     else:
@@ -164,7 +164,7 @@ def select_skill_tools(model_name):
                 }
             }
         ]
-    elif model_name == "gpt-4o" or "o4-mini":
+    elif model_name == "gpt-4o" or model_name == "o4-mini":
         return [
             {
                 "type": "function",
@@ -209,7 +209,7 @@ def skill_evaluate_tools(model_name):
                 }
             }
         ]
-    elif model_name == "gpt-4o" or "o4-mini":
+    elif model_name == "gpt-4o" or model_name == "o4-mini":
         return [
             {
                 "type": "function",
@@ -258,7 +258,7 @@ def skill_evaluate2_tools(model_name):
                 }
             }
         ]
-    elif model_name == "gpt-4o" or "o4-mini":
+    elif model_name == "gpt-4o" or model_name == "o4-mini":
         return [
             {
                 "type": "function",
@@ -325,7 +325,7 @@ def cluster_skills_tool(model_name):
             }
         }
         
-    elif model_name == "gpt-4o" or "o4-mini":
+    elif model_name == "gpt-4o" or model_name == "o4-mini":
         return {
             "type": "function",
             "function": {
@@ -460,7 +460,7 @@ def do_operation_tools(model_name):
                 },
             }
          ]
-    elif model_name == "gpt-4o" or "o4-mini":
+    elif model_name == "gpt-4o" or model_name == "o4-mini":
         return [
             {
                 "type": "function",
@@ -588,7 +588,7 @@ def merge_skills_tool(model_name):
                 "additionalProperties": False
             }
         }
-    elif model_name == "gpt-4o" or "o4-mini":
+    elif model_name == "gpt-4o" or model_name == "o4-mini":
         return     {
             "type": "function",
             "function": {
