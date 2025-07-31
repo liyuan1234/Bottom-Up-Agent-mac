@@ -32,7 +32,28 @@ def generate_skill_tools(model_name):
         ]
     elif model_name == "gpt-4o" or "o4-mini":
         return [
-            {}
+            {
+                "type": "function",
+                "function": {
+                    "name": "save_skill",
+                    "description": "Save the skill to long memory",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "The name of the skill"
+                            },
+                            "description": {
+                                "type": "string",
+                                "description": "The description of the skill"
+                            }
+                        },
+                        "required": ["name", "description"],
+                        "additionalProperties": False
+                    }
+                }
+            }
         ]
     else:
         print(f"Model {model_name} not found")

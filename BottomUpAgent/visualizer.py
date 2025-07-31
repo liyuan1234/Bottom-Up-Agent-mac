@@ -16,7 +16,7 @@ from dash import ctx
 import win32gui
 
 # ---- Load config.yaml ----
-with open('config/config_c5.yaml', 'r') as f:
+with open('config/c5_explore_claude.yaml', 'r') as f:
     default_config = yaml.safe_load(f)
 
 # ---- Global State ----

@@ -245,32 +245,45 @@ class LongMemory:
 
         return skills
 
-    # def delete_action(self, action, action_cluster):
-
-    #     cursor = self.longmemory.cursor()
-
-    #     # # delete action from mcts
-    #     # mcts_id = action['mcts_id']
-    #     # mcts_str = self.get_mcts_by_id(mcts_id)
-    #     # mcts = MCTS.from_dict(mcts_str)
-    #     # mcts.delete_node(action['mcts_node_id'])
+    def delete_skill(self, skill, skill_cluster):
+        cursor = self.longmemory.cursor()
         
-    #     # cursor.execute("UPDATE mcts SET mcts = ? WHERE id = ?", (json.dumps(mcts.to_dict()), mcts_id))
+        # delete skill from skill cluster
+        if skill['id'] in skill_cluster['members']:
+            skill_cluster['members'].remove(skill['id'])
+            if len(skill_cluster['members']) == 0:
+                cursor.execute("DELETE FROM skill_clusters WHERE id = ?", (skill_cluster['id'],))
+            else:
+                cursor.execute("UPDATE skill_clusters SET members = ? WHERE id = ?", (json.dumps(skill_cluster['members']), skill_cluster['id']))
 
-    #     # delete action from action cluster
-    #     if action['id'] in action_cluster['members']:
-    #         action_cluster['members'].remove(action['id'])
-    #         if len(action_cluster['members']) == 0:
-    #             cursor.execute("DELETE FROM action_clusters WHERE id = ?", (action_cluster['id'],))
-    #         else:
-    #             cursor.execute("UPDATE action_clusters SET members = ? WHERE id = ?", (json.dumps(action_cluster['members']), action_cluster['id']))
+        # delete skill from skills
+        id = skill['id']
+        cursor.execute("DELETE FROM skills WHERE id = ?", (id,))
+        self.longmemory.commit()
 
-    #     # delete action from actions
-    #     id = action['id']
-    #     cursor.execute("DELETE FROM actions WHERE id = ?", (id,))
+    def get_skills(self):
+        cursor = self.longmemory.cursor()
+        cursor.execute('SELECT id, name, description, operations, fitness, num, state_id, mcts_node_id FROM skills')
+        records = cursor.fetchall()
+
+        skills = []
+        for record in records:
+            skill = {
+                "id": record[0],
+                "name": record[1],
+                "description": record[2],
+                "operations": json.loads(record[3]),
+                "fitness": record[4],
+                "num": record[5],
+                "state_id": record[6],
+                "mcts_node_id": record[7]
+            }
+            skills.append(skill)
+
+        return skills
+        
 
 
-    #     self.longmemory.commit()
 
 
     
