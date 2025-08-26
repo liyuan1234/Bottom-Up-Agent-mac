@@ -12,7 +12,7 @@ teacher_type: 'Random' # Human or AI or Random
 
 brain:
   base_model: 'claude-3-7-sonnet-20250219' # gpt-4o or claude-3-7-sonnet-20250219
-  reflex_model: 'gpt-4o'
+  evaluate_model: 'gpt-4o'
 
   uct_c: 2.0
   uct_threshold: 0.0

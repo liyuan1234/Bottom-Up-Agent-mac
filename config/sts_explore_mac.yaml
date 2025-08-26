@@ -1,20 +1,20 @@
 project_name: 'SuperGamer'
-game_name: "Sid Meier's Civilization V (DX9)"
-run_name: 'ui-tars - run0'
-close_explore: True
+game_name: 'Slay the Spire'
+run_name: 'claude - no refine - run0'
+close_explore: False
 close_reflexion: False
 close_reset: True
-is_base: True
+is_base: False
 
 result_path: 'results'
 
 teacher_type: 'Random' # Human or AI or Random
 
 brain:
-  base_model: 'UI_TARS' # gpt-4o or claude-3-7-sonnet-20250219 
+  base_model: 'gpt-4o' # gpt-4o or claude-3-7-sonnet-20250219 or ReAct
   evaluate_model: 'gpt-4o'
 
-  uct_c: 2.0
+  uct_c: 5.0
   uct_threshold: 0.0
 
 detector:

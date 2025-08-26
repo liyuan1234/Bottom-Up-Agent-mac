@@ -24,7 +24,7 @@ detector:
 
 eye:
   width: 1280
-  height: 800
+  height: 720
 
 long_memory:
   sim_threshold: 0.9

@@ -1,6 +1,6 @@
 project_name: 'SuperGamer'
 game_name: 'Slay the Spire'
-run_name: 'claude - sam - test1'
+run_name: 'macbook run 11 aug'
 close_explore: False
 close_reflexion: False
 close_reset: False
@@ -18,7 +18,7 @@ brain:
   uct_threshold: 0.0
 
 detector:
-  sam_weights: 'weights/sam_vit_b_01ec64.pth'  # sam_vit_b_01ec64 or sam_vit_b_4b8939
+  sam_weights: 'weights/sam_vit_b_01ec64.pth'  # sam_vit_b_01ec64 or sam_vit_h_4b8939
   sam_type: 'vit_b'     # vit_h or vit_b
   clip_model: 'ViT-B/32' # ViT-B/32, ViT-B/16, ViT-L/14, RN50
 
