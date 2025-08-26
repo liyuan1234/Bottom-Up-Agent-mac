@@ -87,16 +87,34 @@ class BottomUpAgent:
         ob = self.get_observation()
 
         state = self.brain.long_memory.get_state(ob)
+
         if state is None:
             print("No state found, create state")
-            mcts = MCTS()
 
+            mcts = MCTS()
+            
+            import cv2
+            import os
+            from datetime import datetime
+            
+            # Save the screen as PNG to ../images
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")[:-3]
+            output_dir = "./states"
+            os.makedirs(output_dir, exist_ok=True)
+            filename = f"state_screen_{timestamp}.png"
+            filepath = os.path.join(output_dir, filename)
+            cv2.imwrite(filepath, ob['screen'])
+            print(f"Saved state screen to {filepath}")
+            
+            _, image_blob = cv2.imencode('.png', ob['screen'])
+            image_blob = image_blob.tobytes()
             state = {
                 'id': None,
                 'state_feature': ob['state_feature'],
                 'object_ids': [],
                 'mcts': mcts,
                 'skill_clusters': [],
+                "image": ob['screen'],  # Store the original screen, not the blob
             }
             state['id'] = self.brain.long_memory.save_state(state)
             

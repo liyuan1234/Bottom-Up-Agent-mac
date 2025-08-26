@@ -97,8 +97,8 @@ class LongMemory:
         mcts_str = json.dumps(state['mcts'].to_dict())
         objects_ids_str = json.dumps(state['object_ids'])
         skill_clusters_str = json.dumps(state['skill_clusters'])
-        
-        # Encode image to blob
+
+        # Always encode the image - it should be present
         _, image_blob = cv2.imencode('.png', state['image'])
         image_blob = image_blob.tobytes()
 
@@ -112,7 +112,7 @@ class LongMemory:
 
     def get_state(self, ob, sim_threshold=0.85):
         cursor = self.longmemory.cursor()
-        cursor.execute('SELECT id, state_feature, mcts, object_ids, skill_clusters FROM states')
+        cursor.execute('SELECT id, state_feature, mcts, object_ids, skill_clusters, image FROM states')
         records = cursor.fetchall()
 
         max_sim = -1
@@ -129,12 +129,22 @@ class LongMemory:
 
         if max_sim > sim_threshold:
             record = records[best_idx]
+
+            # Encode and save the screenshot to database
+            _, image_blob = cv2.imencode('.png', ob['screen'])
+            image_blob = image_blob.tobytes()
+            
+            # Update the database with the new screenshot
+            cursor.execute("UPDATE states SET image = ? WHERE id = ?", (image_blob, record[0]))
+            self.longmemory.commit()
+            
             state = {
                 "id": record[0],
                 "state_feature": pickle.loads(record[1]),
                 "mcts": MCTS.from_dict(json.loads(record[2])),
                 "object_ids": json.loads(record[3]),
-                "skill_clusters": json.loads(record[4])
+                "skill_clusters": json.loads(record[4]),
+                "image": ob['screen']  # Store the original screen, not the blob
             }
             return state
         else:
@@ -145,9 +155,22 @@ class LongMemory:
         objects_ids_str = json.dumps(state['object_ids'])
         skill_clusters_str = json.dumps(state['skill_clusters'])
 
+        # Handle image encoding if present in state
+        image_blob = None
+        if 'image' in state and state['image'] is not None:
+            _, image_blob = cv2.imencode('.png', state['image'])
+            image_blob = image_blob.tobytes()
+
         cursor = self.longmemory.cursor()
-        cursor.execute("UPDATE states SET mcts = ?, object_ids = ?, skill_clusters = ? WHERE id = ?", 
-                       (mcts_str, objects_ids_str, skill_clusters_str, state['id']))
+        
+        # Update with or without image based on availability
+        if image_blob is not None:
+            cursor.execute("UPDATE states SET mcts = ?, object_ids = ?, skill_clusters = ?, image = ? WHERE id = ?", 
+                           (mcts_str, objects_ids_str, skill_clusters_str, image_blob, state['id']))
+        else:
+            cursor.execute("UPDATE states SET mcts = ?, object_ids = ?, skill_clusters = ? WHERE id = ?", 
+                           (mcts_str, objects_ids_str, skill_clusters_str, state['id']))
+        
         self.longmemory.commit()
 
     """   skill clusters   """
