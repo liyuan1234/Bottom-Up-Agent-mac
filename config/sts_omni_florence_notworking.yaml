@@ -1,6 +1,6 @@
 project_name: 'SuperGamer'
 game_name: 'Slay the Spire'
-run_name: 'claude - sam - test1'
+run_name: 'claude - omni - test1'
 close_explore: False
 close_reflexion: False
 close_reset: False
@@ -18,8 +18,20 @@ brain:
   uct_threshold: 0.0
 
 detector:
-  sam_weights: 'weights/sam_vit_b_01ec64.pth'  # sam_vit_b_01ec64 or sam_vit_b_4b8939
-  sam_type: 'vit_b'     # vit_h or vit_b
+  type: 'omni'  # 'sam' or 'omni'
+  # config for sam
+  sam:
+    sam_weights: 'weights/sam_vit_b_01ec64.pth'
+    sam_type: 'vit_b'
+  # config for omni
+  omni:
+    som_model_path: 'weights/icon_detect/model.pt'
+    caption_model_name: 'florence2'
+    caption_model_path: 'weights/Florence-2-base'
+    BOX_TRESHOLD: 0.35
+    iou_threshold: 0.4
+    text_overlap_threshold: 0.25
+  # general
   clip_model: 'ViT-B/32' # ViT-B/32, ViT-B/16, ViT-L/14, RN50
 
 eye:
