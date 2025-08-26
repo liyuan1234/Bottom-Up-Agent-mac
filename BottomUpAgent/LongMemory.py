@@ -33,7 +33,7 @@ class LongMemory:
         #create table
         cursor = self.longmemory.cursor()
 
-        cursor.execute("CREATE TABLE IF NOT EXISTS states (id INTEGER PRIMARY KEY, state_feature BLOB, mcts TEXT, object_ids TEXT, skill_clusters TEXT)")
+        cursor.execute("CREATE TABLE IF NOT EXISTS states (id INTEGER PRIMARY KEY, state_feature BLOB, mcts TEXT, object_ids TEXT, skill_clusters TEXT, image BLOB)")
 
         cursor.execute("CREATE TABLE IF NOT EXISTS objects (id INTEGER PRIMARY KEY, name TEXT , image BLOB, hash BLOB, area INTEGER)")
 
@@ -97,10 +97,11 @@ class LongMemory:
         mcts_str = json.dumps(state['mcts'].to_dict())
         objects_ids_str = json.dumps(state['object_ids'])
         skill_clusters_str = json.dumps(state['skill_clusters'])
+        image_blob = cv2.imencode('.png', state['image'])[1].tobytes()
 
         cursor = self.longmemory.cursor()
-        cursor.execute("INSERT INTO states (state_feature, mcts, object_ids, skill_clusters) VALUES (?, ?, ?, ?)", 
-                       (state_feature_blob, mcts_str, objects_ids_str, skill_clusters_str))
+        cursor.execute("INSERT INTO states (state_feature, mcts, object_ids, skill_clusters, image) VALUES (?, ?, ?, ?, ?)", 
+                       (state_feature_blob, mcts_str, objects_ids_str, skill_clusters_str, image_blob))
         self.longmemory.commit()
 
         state_id = cursor.lastrowid
@@ -130,7 +131,8 @@ class LongMemory:
                 "state_feature": pickle.loads(record[1]),
                 "mcts": MCTS.from_dict(json.loads(record[2])),
                 "object_ids": json.loads(record[3]),
-                "skill_clusters": json.loads(record[4])
+                "skill_clusters": json.loads(record[4]),
+                "image": ob['screen'],
             }
             return state
         else:
