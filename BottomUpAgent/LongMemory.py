@@ -9,7 +9,7 @@ from .Mcts import MCTS
 
 class LongMemory:
     def __init__(self, config):
-        self.name = config["game_name"]
+        self.name = config['game_name']
         self.longmemory = sqlite3.connect(self.name+'.db')
         self.sim_threshold = config['long_memory']['sim_threshold']
 
@@ -33,7 +33,7 @@ class LongMemory:
         #create table
         cursor = self.longmemory.cursor()
 
-        cursor.execute("CREATE TABLE IF NOT EXISTS states (id INTEGER PRIMARY KEY, state_feature BLOB, mcts TEXT, object_ids TEXT, skill_clusters TEXT, image BLOB)")
+        cursor.execute("CREATE TABLE IF NOT EXISTS states (id INTEGER PRIMARY KEY, state_feature BLOB, mcts TEXT, object_ids TEXT, skill_clusters TEXT)")
 
         cursor.execute("CREATE TABLE IF NOT EXISTS objects (id INTEGER PRIMARY KEY, name TEXT , image BLOB, hash BLOB, area INTEGER)")
 
@@ -97,14 +97,10 @@ class LongMemory:
         mcts_str = json.dumps(state['mcts'].to_dict())
         objects_ids_str = json.dumps(state['object_ids'])
         skill_clusters_str = json.dumps(state['skill_clusters'])
-        
-        # Encode image to blob
-        _, image_blob = cv2.imencode('.png', state['image'])
-        image_blob = image_blob.tobytes()
 
         cursor = self.longmemory.cursor()
-        cursor.execute("INSERT INTO states (state_feature, mcts, object_ids, skill_clusters, image) VALUES (?, ?, ?, ?, ?)", 
-                       (state_feature_blob, mcts_str, objects_ids_str, skill_clusters_str, image_blob))
+        cursor.execute("INSERT INTO states (state_feature, mcts, object_ids, skill_clusters) VALUES (?, ?, ?, ?)", 
+                       (state_feature_blob, mcts_str, objects_ids_str, skill_clusters_str))
         self.longmemory.commit()
 
         state_id = cursor.lastrowid
@@ -285,10 +281,10 @@ class LongMemory:
             skills.append(skill)
 
         return skills
+        
 
 
 
 
-
-
+    
 
