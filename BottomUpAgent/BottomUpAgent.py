@@ -374,7 +374,7 @@ class BottomUpAgent:
         os.makedirs(output_dir, exist_ok=True)
         filename = f"state_screen_{timestamp}.png"
         filepath = os.path.join(output_dir, filename)
-        cv2.imwrite(filepath, ob['screen'])
+        cv2.imwrite(filepath, ob1['screen'])
         print(f"Saved state screen to {filepath}")
 
         operation = self.brain.do_operation(step, task, ob1, get_pre_knowledge(self.game_name))
