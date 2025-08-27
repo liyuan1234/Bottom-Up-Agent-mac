@@ -10,3 +10,8 @@ base_model/.env
 wandb/
 results/
 Slay the Spire/objects_no_use
+BottomUpAgent/.DS_Store
+base_model/.DS_Store
+.DS_Store
+base_model/keys.env.txt
+.DS_Store
