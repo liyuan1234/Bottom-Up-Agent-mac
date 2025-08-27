@@ -361,15 +361,30 @@ class BottomUpAgent:
         self.state_reset()
         self.logger.log({"decision": 1, "decision_text": "Exploit"}, step)
         push_data({'step': step, 'decision': 'Exploit'})
-        states = [self.get_state()]
-        operation = self.brain.do_operation(step, task, states[0], get_pre_knowledge(self.game_name))
+        
+        # Use get_observation() instead of get_state()
+        ob1 = self.get_observation()
+        import cv2
+        import os
+        from datetime import datetime
+        
+        # Save the screen as PNG to ../images
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")[:-3]
+        output_dir = "./states_base"
+        os.makedirs(output_dir, exist_ok=True)
+        filename = f"state_screen_{timestamp}.png"
+        filepath = os.path.join(output_dir, filename)
+        cv2.imwrite(filepath, ob['screen'])
+        print(f"Saved state screen to {filepath}")
+
+        operation = self.brain.do_operation(step, task, ob1, get_pre_knowledge(self.game_name))
         if operation is None:
             return 'Continue'
         self.hand.do_operation(operation, self.eye.left, self.eye.top)
         time.sleep(3.0)
-        states.append(self.get_state())
+        ob2 = self.get_observation()
 
-        if not self.eye.detect_acted_cv(states[-2]['screen'], states[-1]['screen']):
+        if not self.eye.detect_acted_cv(ob1['screen'], ob2['screen']):
             print("Action not acted")
             self.logger.log({"eval/skill_acted": 0}, step)
             return 'Continue'
@@ -377,7 +392,8 @@ class BottomUpAgent:
         # skill_evaluate
         if not self.close_evaluate:
             time0 = time.time()
-            is_progressive = self.brain.skill_evaluate2(step, task, states)
+            observations = [ob1, ob2]
+            is_progressive = self.brain.skill_evaluate2(step, task, observations)
             elapsed_time = time.time() - time0
             print(f"skill_evaluate elapsed_time: {elapsed_time}")
             print(f"is_progressive: {is_progressive}")
@@ -392,8 +408,8 @@ class BottomUpAgent:
 
         self.logger.log({"eval/skill_acted": 1}, step)
 
-        im1 = f'data:image/png;base64,{cv_to_base64(states[0]["screen"])}'
-        im2 = f'data:image/png;base64,{cv_to_base64(states[1]["screen"])}'
+        im1 = f'data:image/png;base64,{cv_to_base64(ob1["screen"])}'
+        im2 = f'data:image/png;base64,{cv_to_base64(ob2["screen"])}'
 
         push_data({'exec_chain': [{'screen': im1, 'operation': operation}, {'screen': im2}]})
         return 'Continue'
