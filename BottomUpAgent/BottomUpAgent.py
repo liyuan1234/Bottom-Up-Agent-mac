@@ -224,7 +224,7 @@ class BottomUpAgent:
         if select_operation == 'do operation using brain.do_operation!':            
             state_with_screen_attribute = {'screen': state['image']}
             response = self.brain.do_operation(step, '', state_with_screen_attribute, pre_knowledge=None)
-            print('Using AI to pick operation. AI response:'+response)
+            print(f'Using AI to pick operation. AI response: {response}')
             select_operation = {'operate': response['operate'],'object_id':[], 'params': response['params']}
         print(f"select_operation: {select_operation}")
         existed_children_operations.append(select_operation)
