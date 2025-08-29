@@ -225,7 +225,11 @@ class BottomUpAgent:
             state_with_screen_attribute = {'screen': state['image']}
             response = self.brain.do_operation(step, '', state_with_screen_attribute, pre_knowledge=None)
             print(f'Using AI to pick operation. AI response: {response}')
-            select_operation = {'operate': response['operate'],'object_id':[], 'params': response['params']}
+            if response is not None:
+                select_operation = {'operate': response['operate'],'object_id':None, 'params': response['params']}
+            else:
+                print("No operation selected by AI")
+                select_operation = candidate_operations[np.random.randint(0, len(candidate_operations))]
         print(f"select_operation: {select_operation}")
         existed_children_operations.append(select_operation)
         operation_ = self.operate_grounding(select_operation, obs[-1])

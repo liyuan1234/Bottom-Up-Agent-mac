@@ -47,9 +47,9 @@ class Teacher():
             listener.join()
             
         if (abs(start_pos[0] - end_pos[0]) + abs(start_pos[1]-end_pos[1])) < 1: # check if mouse moved much
-            return {'operate': 'Click', 'object_id': [], 'params': {'x': start_pos[0],'y':start_pos[1]}} 
+            return {'operate': 'Click', 'object_id': None, 'params': {'x': start_pos[0],'y':start_pos[1]}} 
         else:
-            return {'operate': 'Drag', 'object_id': [], 'params': {'x1': start_pos[0],'y1':start_pos[1],'x2':end_pos[0],'y2':end_pos[1]}} 
+            return {'operate': 'Drag', 'object_id': None, 'params': {'x1': start_pos[0],'y1':start_pos[1],'x2':end_pos[0],'y2':end_pos[1]}} 
 
 
     def get_operation_guidance_human(self, candidate_operations):

@@ -80,6 +80,10 @@ class LongMemory:
         return objects
 
     def get_object_image_by_id(self, id):
+        if id is None or not isinstance(id, int):
+            print(f"Invalid object ID: {id}")
+            return None
+
         cursor = self.longmemory.cursor()
         cursor.execute('SELECT image FROM objects WHERE id = ?', (id,))
         record = cursor.fetchone()
