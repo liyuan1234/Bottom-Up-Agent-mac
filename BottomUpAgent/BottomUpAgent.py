@@ -218,49 +218,17 @@ class BottomUpAgent:
 
 
         #{'operate': 'Click', 'object_id': 46, 'params': {'x': 482, 'y': 35}}
-        use_human_input = False
-        if use_human_input:
-            from pynput import mouse
-            import pyautogui
+        # if not hasattr(self.teacher, 'brain') or self.teacher.brain is None:
+        #     self.teacher.brain = self.brain
+        select_operation = self.teacher.get_operation_guidance(candidate_operations)
+        if select_operation is 'do operation using brain.do_operation!':
+            select_operation = self.brain.do_operation(step, task, state, pre_knowledge=None)
 
-            def await_mouse_operation():
-                start_pos = [None,None]
-                end_pos = [None,None]
-                def on_move(x, y):
-                    print(f'move: {x},{y}', end='\r')
-                
-                def on_click(x, y, button, pressed):
-                    if pressed:
-                        start_pos[0] = x
-                        start_pos[1] = y
-                        return True # do not terminate yet
-                    elif not pressed:
-                        end_pos[0] = x
-                        end_pos[1] = y
-                        
-                        print(f'startpos: {start_pos}')
-                        print(f'end pos: {end_pos}')
-                        return False     # terminate
-                    
-                with mouse.Listener(on_click=on_click, on_move=on_move) as listener:
-                    listener.join()
-                    
-                if (abs(start_pos[0] - end_pos[0]) + abs(start_pos[1]-end_pos[1])) < 1: # check if mouse moved much
-                    return {'operate': 'Click', 'object_id': [], 'params': {'x': start_pos[0],'y':start_pos[1]}} # return a click
-                else:
-                    return {'operate': 'Drag', 'object_id': [], 'params': {'x1': start_pos[0],'y1':start_pos[1],'x2':end_pos[0],'y2':end_pos[1]}} # return drag
+        print(f"select_operation: {select_operation}")
+        existed_children_operations.append(select_operation)
+        operation_ = self.operate_grounding(select_operation, obs[-1])
 
-            print('awaiting click...')
-            mouse_operation = await_mouse_operation()
-            print(mouse_operation)
-            select_operation = mouse_operation
-        else:
-            select_operation = self.teacher.get_operation_guidance(candidate_operations)
-            print(f"select_operation: {select_operation}")
-            existed_children_operations.append(select_operation)
-            operation_ = self.operate_grounding(select_operation, obs[-1])
-
-            self.hand.do_operation(operation_, self.eye.left, self.eye.top)
+        self.hand.do_operation(operation_, self.eye.left, self.eye.top)
         time.sleep(self.exec_duration)
         obs.append(self.get_observation())
         operations.append(select_operation)
