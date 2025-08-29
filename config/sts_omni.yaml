@@ -8,7 +8,7 @@ is_base: False
 
 result_path: 'results'
 
-teacher_type: 'AI' # Human or AI or Random
+teacher_type: 'human-mouse' # Human or AI or Random
 
 brain:
   base_model: 'claude-3-7-sonnet-20250219' # gpt-4o or claude-3-7-sonnet-20250219

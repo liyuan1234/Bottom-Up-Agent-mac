@@ -13,7 +13,7 @@ class Teacher():
         if self.type == 'Human':
             return self.get_operation_guidance_human(candidate_operations)
         
-        elif self.type == 'mouse_click':
+        elif self.type == 'human-mouse':
             print('awaiting click...')
             return self.await_mouse_operation()
         elif self.type == 'AI':

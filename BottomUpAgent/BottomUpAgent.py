@@ -218,8 +218,6 @@ class BottomUpAgent:
 
 
         #{'operate': 'Click', 'object_id': 46, 'params': {'x': 482, 'y': 35}}
-        # if not hasattr(self.teacher, 'brain') or self.teacher.brain is None:
-        #     self.teacher.brain = self.brain
         select_operation = self.teacher.get_operation_guidance(candidate_operations)
         if select_operation == 'do operation using brain.do_operation!':            
             state_with_screen_attribute = {'screen': state['image']}
@@ -230,6 +228,8 @@ class BottomUpAgent:
             else:
                 print("No operation selected by AI")
                 select_operation = candidate_operations[np.random.randint(0, len(candidate_operations))]
+
+                
         print(f"select_operation: {select_operation}")
         existed_children_operations.append(select_operation)
         operation_ = self.operate_grounding(select_operation, obs[-1])
