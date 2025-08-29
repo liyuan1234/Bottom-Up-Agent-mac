@@ -221,9 +221,11 @@ class BottomUpAgent:
         # if not hasattr(self.teacher, 'brain') or self.teacher.brain is None:
         #     self.teacher.brain = self.brain
         select_operation = self.teacher.get_operation_guidance(candidate_operations)
-        if select_operation is 'do operation using brain.do_operation!':
-            select_operation = self.brain.do_operation(step, task, state, pre_knowledge=None)
-
+        if select_operation == 'do operation using brain.do_operation!':            
+            state_with_screen_attribute = {'screen': state['image']}
+            response = self.brain.do_operation(step, '', state_with_screen_attribute, pre_knowledge=None)
+            print('Using AI to pick operation. AI response:'+response)
+            select_operation = {'operate': response['operate'],'object_id':[], 'params': response['params']}
         print(f"select_operation: {select_operation}")
         existed_children_operations.append(select_operation)
         operation_ = self.operate_grounding(select_operation, obs[-1])

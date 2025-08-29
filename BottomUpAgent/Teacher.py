@@ -15,7 +15,7 @@ class Teacher():
         
         elif self.type == 'mouse_click':
             print('awaiting click...')
-            retrun self.await_mouse_operation()
+            return self.await_mouse_operation()
         elif self.type == 'AI':
             return 'do operation using brain.do_operation!' 
         elif self.type == 'Random':

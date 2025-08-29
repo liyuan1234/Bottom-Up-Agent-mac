@@ -1,14 +1,14 @@
 project_name: 'SuperGamer'
 game_name: 'Slay the Spire'
-run_name: 'claude - omni - blip2'
+run_name: 'claude - omni hand trained run1'
 close_explore: False
 close_reflexion: False
-close_reset: False
-is_base: False
+close_reset: True
+is_base: True
 
 result_path: 'results'
 
-teacher_type: 'AI' # Human or AI or Random
+teacher_type: 'Random' # Human or AI or Random
 
 brain:
   base_model: 'claude-3-7-sonnet-20250219' # gpt-4o or claude-3-7-sonnet-20250219
